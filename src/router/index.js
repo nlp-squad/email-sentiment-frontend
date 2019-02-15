@@ -29,7 +29,7 @@ export default new Router({
       component: Tools
     },
     {
-      path: '/reademail',
+      path: '/reademail/:from/:address/:subject?/:message/:date/:class',
       component: ReadEmail
     }
   ],

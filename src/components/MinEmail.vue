@@ -4,13 +4,21 @@
     <div class="min-email-body">
       <span class="min-email-subject"> {{ email.Subject }} </span> -
       <span class="min-email-message"> {{ email.Message }} </span>
-        <router-link to="/reademail" tag="button" class="min-email-reply" :email="email">
+      <div class="min-email-labels">
+        <span class="positive" v-if="email.Class === 'Positive'"> Positive </span>
+        <span class="negative" v-else> Negative </span>
+        <router-link :to="'/reademail/' +this.email.FromName+ '/' +this.email.FromAddress+ '/' +this.email.Subject+ '/' +this.email.Message+ '/' +this.email.Date+ '/' +this.email.Class"
+          tag="button"
+          class="min-email-reply"
+          :email="email">
           <svg v-svg
           symbol="icon-reply"
-          size="0 0 16 16"
+          size="0 0 12 12"
           role="presentation"
           ></svg>
+          <span class="min-email-reply-text" >Reply</span>
         </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -32,11 +40,17 @@ export default {
 
 <style lang="scss" scoped>
   .min-email{
-    height: 6rem;
+    height: 7.5rem;
     padding: .8rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+
+    &-labels {
+      padding-top: .5rem;
+      padding-bottom: .5rem;
+      font-weight: bold;
+    }
 
     &:not(:last-child) {
       border-bottom-style: solid;
@@ -67,11 +81,13 @@ export default {
       float: right;
       outline: none;
       border: none;
-      padding: .2rem;
       background: none;
-
+      padding: 0.4rem;
+      vertical-align:middle;
+      border-width: 1px;
+      border-style: solid;
       &:hover {
-         border-radius: 50%;
+         border-radius: 5%;
          background-color: #616161;
          cursor: pointer;
       }
@@ -80,7 +96,22 @@ export default {
         outline: none;
         border: none
       }
+
     }
+  }
+
+  .positive {
+    background-color: #43A047;
+    color: #f3f3f3;
+    padding: 0.2rem;
+    border-radius: 5%;
+  }
+
+  .negative {
+    background-color: #E53935;
+    color: #f3f3f3;
+    padding: 0.2rem;
+    border-radius: 5%;
   }
 
   .min-email:hover {

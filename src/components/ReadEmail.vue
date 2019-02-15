@@ -1,40 +1,74 @@
 <template>
   <div class="email-container">
     <div class="heading">
-      <h2 class="heading-from"> Tanaka Muchandibaya </h2>
+      <h2 class="heading-from"> From: {{ $route.params.from }} </h2>
       <h3 class="heading-subject-data">
-        <span class="subject"> Customer Service - </span>
-        <span class="date"> 12/12/2018 </span>
+        <span class="subject"> Subject:  {{ $route.params.subject }} --- </span>
+        <span class="date"> Date And Time Received: {{ $route.params.date }} </span>
       </h3>
-      <div class="message">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad ab itaque alias incidunt nesciunt repellendus aut dicta rem veniam, iure veritatis odio aperiam vero error repellat explicabo quibusdam ex voluptatibus nulla odit. Ab atque ipsa modi vel? Optio, suscipit! Voluptate nam quod assumenda, cumque hic quis exercitationem consequatur qui atque voluptatem, quaerat delectus molestias vero eius natus? Nihil ab cum unde ut commodi aperiam aspernatur iste similique enim, magnam ad veritatis atque non nam velit necessitatibus officiis blanditiis doloribus beatae nostrum iure eaque voluptas. Fugiat consectetur earum pariatur temporibus sequi molestiae officia voluptates est nobis, blanditiis harum odit ipsam accusamus.</p>
+      <h3 class="heading-class">
+        Class:
+        <svg v-if="$route.params.class == 'Positive'" v-svg
+              symbol="icon-happy2"
+              size="0 0 24 24"
+              role="presentation"
+              class="class-icon class-icon-positive">
+        </svg>
+        <svg v-else v-svg
+              symbol="icon-angry2"
+              size="0 0 24 24"
+              role="presentation"
+              class="class-icon class-icon-negative">
+        </svg>
+        {{ $route.params.class }}
+      </h3>
+    </div>
+    <div class="message">
+      <p> <span class="message-start">Message: </span> {{ $route.params.message }} </p>
+    </div>
+    <div class="reply-section">
+      Reply:
+      <textarea v-model="message" name="" id="" cols="30" rows="10"></textarea>
+      <div v-if="sent" class="sent">
+        Message Was Successfully Sent
       </div>
-      <div class="reply-section">
-        Reply:
-        <textarea v-model="message" name="" id="" cols="30" rows="10"></textarea>
-        <div class="button-container">
-          <button @click="sendemail" class="send-button">
-            Send
-          </button>
-        </div>
+      <div v-if="notSent" class="not-sent">
+        Message Was Successfully Not Sent
+      </div>
+      <div v-if="!sent" class="button-container">
+        <button @click="sendemail" class="send-button">
+          Send
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data () {
     return {
-      message: ''
+      message: '',
+      sent: false,
+      notSent: false
     }
   },
   methods: {
-    sendmessage: function () {
-      emailData: {
-        message = this.message
-        subject = ""
+    sendemail: function () {
+      var emailData = {
+        message: this.message,
+        subject: this.$route.params.subject,
+        address: this.$route.params.address
       }
+      axios.post('http://localhost:3000/emails', emailData).then((res) => {
+        if (res.status === 200) {
+          this.sent = true
+        } else if (res.status === 500) {
+          this.notSent = true
+        }
+      })
     }
   }
 }
@@ -53,10 +87,36 @@ export default {
     &-subject-data {
       padding: 0 0 1rem;
     }
+    &-class {
+      padding: 0 0 1rem;
+    }
+  }
+  .message p {
+    text-align: left;
+    padding-top: 1rem;
+    font-size: 2.5rem
   }
 
-  .message p {
-    text-align: justify;
+  .class {
+    &-icon {
+      width: 1.75rem;
+      height: 1.75rem;
+      margin-right: 0.3rem;
+      margin-left: 0.5rem;
+      fill: currentColor;
+      &-negative {
+        fill: #E53935;
+      }
+
+      &-positive {
+        fill: #43A047;
+      }
+    }
+  }
+
+  .message-start {
+    font-weight: 500;
+    font-size: 2.5rem;
   }
 
   .reply-section {
@@ -76,6 +136,7 @@ export default {
 
   .reply-section textarea:focus {
     box-shadow: 0 1rem 2rem rgba($color: #000, $alpha: .15);
+    outline: none
   }
 
   .button-container {
@@ -103,6 +164,16 @@ export default {
 
   .send-button:active {
     box-shadow: none;
+  }
+
+  .sent {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    width: 80%;
+    padding: 2rem;
+    background-color: #42A5F5;
+    margin: 2rem auto
   }
 
 </style>

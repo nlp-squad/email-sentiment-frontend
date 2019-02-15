@@ -6,7 +6,7 @@ import router from './router'
 import SvgSprite from 'vue-svg-sprite'
 import VueSocket from 'vue-socket.io'
 
-Vue.use(VueSocket, 'http://127.0.0.1:5000/incomingmail')
+Vue.use(VueSocket, 'http://127.0.0.1:80/incomingmail')
 
 Vue.use(SvgSprite, {
   url: '/static/icons.svg'

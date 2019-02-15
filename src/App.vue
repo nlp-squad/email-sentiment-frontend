@@ -83,28 +83,26 @@ export default {
   name: 'App',
   created () {
     let vm = this
-    axios.get('http://localhost:5000/getallemails')
-      .then(function (res) {
+    axios.get('http://localhost:3000/emails').then(function (res) {
       // res has data from the server
-        let emails = Object.values(res.data)
-        emails.forEach(function (email) {
-          vm.emails.unshift(email)
-        })
-        vm.allEmails = vm.emails
-        vm.negativeEmails = vm.allEmails.filter(function (email) {
-          return email.Class === 'Negative'
-        })
-        vm.positiveEmails = vm.allEmails.filter(function (email) {
-          return email.Class === 'Positive'
-        })
-        vm.neutralEmails = vm.allEmails.filter(function (email) {
-          return email.Class === 'Neutral'
-        })
-        vm.numberOfAllEmails = vm.allEmails.length
-        vm.numberOfNegativeEmails = vm.negativeEmails.length
-        vm.numberOfPositiveEmails = vm.positiveEmails.length
-        vm.numberOfNeutralEmails = vm.neutralEmails.length
+      res.data.forEach(function (email) {
+        vm.emails.unshift(email)
       })
+      vm.allEmails = vm.emails
+      vm.negativeEmails = vm.allEmails.filter(function (email) {
+        return email.Class === 'Negative'
+      })
+      vm.positiveEmails = vm.allEmails.filter(function (email) {
+        return email.Class === 'Positive'
+      })
+      vm.neutralEmails = vm.allEmails.filter(function (email) {
+        return email.Class === 'Neutral'
+      })
+      vm.numberOfAllEmails = vm.allEmails.length
+      vm.numberOfNegativeEmails = vm.negativeEmails.length
+      vm.numberOfPositiveEmails = vm.positiveEmails.length
+      vm.numberOfNeutralEmails = vm.neutralEmails.length
+    })
       .catch(function (error) {
         console.log(error)
       })
@@ -145,6 +143,9 @@ export default {
   sockets: {
     connect: function () {
       console.log('Im connected')
+    },
+    initialised: function (message) {
+      console.log(message)
     },
     newmail: function (email) {
       this.allEmails.unshift(email)
