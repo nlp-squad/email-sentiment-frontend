@@ -25,10 +25,10 @@
 export default {
   methods: {
     gotostatistics: function () {
-      this.$router.push('statistics')
+      this.$router.push({path: 'tools/statistics'})
     },
     gotorealtimetweets: function () {
-      this.$router.push('realtimetweets')
+      this.$router.push({path: 'tools/realtimetweets'})
     }
   }
 }
@@ -46,6 +46,7 @@ export default {
       padding: 1rem;
       border-radius: 1px;
       cursor: pointer;
+      transition: all .3s;
 
       &-icon {
       fill: #039BE5;

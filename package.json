@@ -12,9 +12,11 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "chart.js": "^2.7.3",
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "vue": "^2.5.2",
+    "vue-chartjs": "^3.4.0",
     "vue-router": "^3.0.1",
     "vue-socket.io": "^2.1.1-b",
     "vue-svg-sprite": "^1.2.3"
