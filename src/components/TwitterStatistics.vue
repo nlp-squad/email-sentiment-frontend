@@ -36,6 +36,19 @@
         </span>
       </div>
     </div>
+    <div v-if="nothingfound" class="center">
+      <svg v-svg
+        symbol="icon-file-empty"
+        size="0 0 128 128"
+        role="presentation"
+        class="empty">
+      </svg>
+      <div>
+        <span class="loader-text">
+          Nothing Found On That Topic
+        </span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -50,6 +63,7 @@ export default {
   data () {
     return {
       showchart: false,
+      nothingfound: false,
       loading: false,
       positive: 0,
       negative: 0,
@@ -70,26 +84,32 @@ export default {
     search () {
       this.loading = true
       this.showchart = false
+      this.nothingfound = false
       var data = {
         query: this.query,
         count: 100000
       }
       axios.post('http://localhost:4000/twittersentiment', data).then((response) => {
-        this.positive = response.data.positiveTweets.percentage
-        this.negative = response.data.negativeTweets.percentage
-        this.neutral = response.data.neutralTweets.percentage
-        this.chartdata = {
-          labels: ['Positive', 'Negative', 'Neutral'],
-          datasets: [
-            {
-              label: 'Twitter Data',
-              backgroundColor: ['#43A047', '#E53935', '#6D4C41'],
-              data: [this.positive, this.negative, this.neutral]
-            }
-          ]
+        if (response.data.message) {
+          this.nothingfound = true
+          this.loading = false
+        } else {
+          this.positive = response.data.positiveTweets.percentage
+          this.negative = response.data.negativeTweets.percentage
+          this.neutral = response.data.neutralTweets.percentage
+          this.chartdata = {
+            labels: ['Positive', 'Negative', 'Neutral'],
+            datasets: [
+              {
+                label: 'Twitter Data',
+                backgroundColor: ['#43A047', '#E53935', '#6D4C41'],
+                data: [this.positive, this.negative, this.neutral]
+              }
+            ]
+          }
+          this.showchart = true
+          this.loading = false
         }
-        this.showchart = true
-        this.loading = false
       }).catch((err) => {
         console.log(err)
       })
@@ -102,6 +122,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .nothingfound {
+    margin: 5rem auto;
+  }
+  .empty {
+    fill: #039BE5;
+  }
   .center {
     position: absolute;
     left: 40%;
