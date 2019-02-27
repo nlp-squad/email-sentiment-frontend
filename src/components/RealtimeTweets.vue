@@ -19,6 +19,11 @@
         <p class="tweet-body-name"> {{`${tweet.screenName}:`}}  </p>
         <!-- <p class="tweet-body-text"> {{tweet.text}} </p> -->
         <div class="tweet-body-text" v-html="tweet.text"></div>
+        <div class="tweet-tags">
+          <span style="float: left" class="positive" v-if="tweet.Class === 'positive'"> Positive </span>
+          <span  style="float: left" class="negative" v-else-if="tweet.Class === 'positive'" > Negative </span>
+          <span  style="float: left" class="neutral" v-else> Neutral </span>
+        </div>
       </div>
     </div>
   </div>
@@ -51,12 +56,34 @@ export default {
   sockets: {
     newtweet: function (data) {
       this.tweets.push(data)
+      console.log(data.Class)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+  .positive {
+    background-color: #43A047;
+    color: #f3f3f3;
+    padding: 0.5rem;
+    border-radius: 10%;
+  }
+
+  .negative {
+    background-color: #E53935;
+    color: #f3f3f3;
+    padding: 0.5rem;
+    border-radius: 10%;
+  }
+
+  .neutral {
+    background-color: rgb(113, 116, 255);
+    color: #f3f3f3;
+    padding: 0.5rem;
+    border-radius: 10%;
+  }
+
   .tweet {
     border-radius: 15px 50px 30px;
     border: .05rem solid #E0E0E0;
@@ -65,6 +92,10 @@ export default {
     background-color: #E0E0E0;
     font-size: 1.5rem;
 
+    &-tags {
+      display: flex;
+      flex-direction: row-reverse;
+    }
     &-body {
       padding: 1rem;
 
