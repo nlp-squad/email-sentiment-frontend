@@ -82,8 +82,11 @@ import axios from 'axios'
 export default {
   name: 'App',
   created () {
+    console.log('App Started')
     let vm = this
+    console.log('Created Hook')
     axios.get('http://localhost:3000/emails').then(function (res) {
+      console.log('sending email request')
       // res has data from the server
       res.data.forEach(function (email) {
         vm.emails.unshift(email)
